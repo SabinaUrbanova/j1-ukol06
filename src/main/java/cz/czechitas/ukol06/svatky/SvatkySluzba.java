@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.MonthDay;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class SvatkySluzba {
 
@@ -18,10 +19,9 @@ public class SvatkySluzba {
     private final SeznamSvatku seznamSvatku;
 
     public SvatkySluzba() throws IOException {
-        // TODO načíst seznam svátků ze souboru svatky.json
+        //  načíst seznam svátků ze souboru svatky.json
+        seznamSvatku = objectMapper.readValue(cestaKDatum.toFile(), SeznamSvatku.class);
 
-        // Následující řádek po vlastní implementaci smažete.
-        seznamSvatku = null;
     }
 
     public List<String> vyhledatSvatkyDnes() {
@@ -29,14 +29,15 @@ public class SvatkySluzba {
     }
 
     public List<String> vyhledatSvatkyKeDni(MonthDay day) {
-        // TODO
         // získat seznam svátků
+        List<Svatek> svatkyKeDni = seznamSvatku.getSvatky();
         // převést na Stream
+        Stream<Svatek> streamSvatku = svatkyKeDni.stream();
         // pomocí metody filter() vybrat jen ty, které odpovídají zadanému dni (porovnat MonthDay pomocí metodyequals())
         // pomocí metody map() získat z objektu jméno
+        streamSvatku = streamSvatku.filter(svatek -> svatek.getDen().equals(day));
+        Stream<String>  streamJmen = streamSvatku.map(Svatek::getJmeno);
         // pomocí toList() převést na List
-
-        // Následující řádek po vlastní implementaci smažete.
-        return List.of();
+        return streamJmen.toList();
     }
 }
