@@ -16,13 +16,18 @@ public class SvatkySluzba {
             .addModule(new JavaTimeModule())
             .build();
     private final Path cestaKDatum = Path.of("data/svatky.json");
-    private final SeznamSvatku seznamSvatku;
 
-    public SvatkySluzba() throws IOException {
+    private  SeznamSvatku seznamSvatku;
+
+    public SvatkySluzba() {
         //  načíst seznam svátků ze souboru svatky.json
-        seznamSvatku = objectMapper.readValue(cestaKDatum.toFile(), SeznamSvatku.class);
-
+        try {
+            this.seznamSvatku = objectMapper.readValue(cestaKDatum.toFile(), SeznamSvatku.class);
+        } catch (IOException e) {
+            System.err.println("Nepodarilo se načíst  seznam svátků.");
+        }
     }
+
 
     public List<String> vyhledatSvatkyDnes() {
         return vyhledatSvatkyKeDni(MonthDay.now());
@@ -41,3 +46,4 @@ public class SvatkySluzba {
         return streamJmen.toList();
     }
 }
+
